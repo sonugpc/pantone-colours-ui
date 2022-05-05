@@ -11,7 +11,7 @@ export interface RawColors {
 })
 export class ColorService {
   constructor(public htmlClient: HttpClient) {}
-
+  //not using with new implemantation
   getColors(): Observable<RawColors[]> {
     return this.htmlClient
       .get('./assets/pantone.json')

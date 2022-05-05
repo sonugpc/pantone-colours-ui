@@ -15,7 +15,6 @@ export class AppComponent {
   backgrounds$:Observable<any> = this.backgrounds.asObservable();
   constructor(private colorService: ColorService) {
     this.backgrounds.next(this.getBackgrounds(0,5))
-    this.backgrounds$.subscribe((r)=>console.log(r))
   }
 
   // backgroundMapper(page: number = 0, limit: number = 5) {
