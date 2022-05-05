@@ -1,13 +1,7 @@
-<div
-  infiniteScroll
-  [infiniteScrollDistance]="2"
-  [infiniteScrollThrottle]="50"
-  (scrolled)="onScroll()"
-  class="container"
->
+<div appInfiniteScroller (scrolled)="onScroll()" class="container">
   <div
     [ngStyle]="{ backgroundColor: back.value }"
-    *ngFor="let back of backgrounds"
+    *ngFor="let back of backgrounds$ | async"
     class="background"
   >
     <p>{{ back.name }}</p>

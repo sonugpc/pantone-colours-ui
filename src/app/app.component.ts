@@ -1,10 +1,5 @@
 import { Component } from '@angular/core';
-import {
-  first,
-  map,
-  Observable,
-  Subject,
-} from 'rxjs';
+import { BehaviorSubject, first, map, Observable, Subject } from 'rxjs';
 import { ColorService, RawColors } from 'src/services/color.service';
 
 @Component({
@@ -16,26 +11,32 @@ export class AppComponent {
   title = 'Pantone World';
   page: number = 0;
   limit: number = 5;
-  backgrounds: Array<RawColors> = new Array();
+  backgrounds: BehaviorSubject<any> = new BehaviorSubject([]);
+  backgrounds$:Observable<any> = this.backgrounds.asObservable();
   constructor(private colorService: ColorService) {
-    this.backgroundMapper(this.page, this.limit);
+    this.backgrounds.next(this.getBackgrounds(0,5))
+    this.backgrounds$.subscribe((r)=>console.log(r))
   }
 
-  backgroundMapper(page: number = 0, limit: number = 5) {
-    this.colorService
-      .getColors()
-      .pipe(
-        map((colors) => {
-          return colors.splice(page * limit, limit);
-        }),
-        first()
-      )
-      .subscribe((data: any) => {
-        this.backgrounds.push(...data);
-      });
-  }
+  // backgroundMapper(page: number = 0, limit: number = 5) {
+  //   this.colorService
+  //     .getColors()
+  //     .pipe(
+  //       map((colors) => {
+  //         return colors.splice(page * limit, limit);
+  //       }),
+  //       first()
+  //     )
+  //     .subscribe((data: any) => {
+  //       this.backgrounds.push(...data);
+  //     });
+  // }
   onScroll() {
     this.page++;
-    this.backgroundMapper(this.page, this.limit);
+    this.backgrounds.next([...this.backgrounds.value,...this.getBackgrounds(this.page,this.limit)])
+  }
+
+  getBackgrounds(page: number = 0, limit: number = 5){
+    return this.colorService.getColorsFromJSON().splice(page * limit, limit)
   }
 }
